@@ -31,6 +31,7 @@ require 'rake/extensioncompiler'
 USER_HOME = File.expand_path("~/.rake-compiler")
 RUBY_CC_VERSION = "ruby-#{ENV['VERSION'] || '1.8.6-p287'}"
 RUBY_SOURCE = ENV['SOURCE']
+RUBY_SOURCE_FILE = RUBY_SOURCE ? RUBY_SOURCE.split('/').last : "#{RUBY_CC_VERSION}.tar.gz"
 
 # grab the major "1.8" or "1.9" part of the version number
 MAJOR = RUBY_CC_VERSION.match(/.*-(\d.\d).\d/)[1]
@@ -66,8 +67,7 @@ file "#{USER_HOME}/sources/#{RUBY_CC_VERSION}.tar.gz" => ["#{USER_HOME}/sources"
 end
 
 # Extract the sources
-source_file = RUBY_SOURCE ? RUBY_SOURCE.split('/').last : "#{RUBY_CC_VERSION}.tar.gz"
-file "#{USER_HOME}/sources/#{RUBY_CC_VERSION}" => ["#{USER_HOME}/sources/#{source_file}"] do |t|
+file "#{USER_HOME}/sources/#{RUBY_CC_VERSION}" => ["#{USER_HOME}/sources/#{RUBY_SOURCE_FILE}"] do |t|
   chdir File.dirname(t.name) do
     t.prerequisites.each { |f| sh "tar xfz #{File.basename(f)}" }
   end
